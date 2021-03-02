@@ -29,12 +29,18 @@ stages:
       vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Build
       inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        arguments: --build-arg SECRET=$(containerSAP)
-        tags: |
-          $(tag)
+       command: build
+       repository: $(imageRepository)
+       dockerfile: $(dockerfilePath)
+       containerRegistry: $(dockerRegistryServiceConnection)
+       tags: latest
+       arguments: --build-arg SECRET=$(containerSAP)
+    - task: Docker@2
+      displayName: Push
+      inputs:
+       command: push
+       containerRegistry: $(dockerRegistryServiceConnection)
+       repository: $(imageRepository)
+       tags: latest
