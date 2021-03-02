@@ -4,7 +4,9 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 
 ARG SECRET
+ARG QSECRET
 ENV CONTAINER_SAP $SECRET
+ENV QEUEU_SAP $QSECRET
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
