@@ -1,0 +1,51 @@
+
+# Login 
+az login
+az account list
+az account set --subscription <your subscription id> # If you have >1 - choose the right one
+
+# Setting up the resourec group and storage
+az group create --location "westeurope" --name "iatiactivitygrp" --tags Customer=Jan-Erik Type=Learn
+az storage account create -n "jeoiatiactivitystorage" -g "iatiactivitygrp" --kind StorageV2 -l "westeurope" --sku Standard_LRS
+
+# List the two account keys for the storage account
+az storage account keys list -g iatiactivitygrp -n jeoiatiactivitystorage
+
+# Below works on bash only
+# STORAGEKEY=$(az storage account keys list --resource-group "iatiactivitygrp" --account-name "jeoiatiactivitystorage" --query "[0].value" | tr -d '"')
+
+#Powershell
+$STORAGEKEY = <copy one ot the keys from the az storage account keys list command above>
+
+
+az storage container create --name "private1" --resource-group "iatiactivitygrp" --account-name "jeoiatiactivitystorage" --account-key $STORAGEKEY
+az storage container create --name "private2" --resource-group "iatiactivitygrp" --account-name "jeoiatiactivitystorage" --account-key $STORAGEKEY
+az storage queue create --name "activity" --account-name "jeoiatiactivitystorage" --account-key $STORAGEKEY
+
+# Download sample file - Algeria activities file
+https://iati.openaid.se/xml/DZ.xml 
+
+
+## Run in Powershell
+
+az acr create --resource-group "iatiactivitygrp" --name "jeoiatiacr" --sku Basic --admin-enabled true
+az acr login --name "jeoiatiacr"
+az acr show --name "jeoiatiacr" --query loginServer --output table
+
+docker images
+docker build -t activityreader -f Dockerfile .
+docker tag activityreader:latest jeoiatiacr.azurecr.io/activityreader:1.0
+docker push jeoiatiacr.azurecr.io/activityreader:1.0
+
+
+
+az acr show --name jeoiatiacr --query loginServer
+$acrUser = az acr credential show -n jeoiatiacr --query username
+$password = az acr credential show -n jeoiatiacr --query "passwords[0].value"  -o tsv
+
+az container create --resource-group iatiactivitygrp --name "ccdemo1aci" --restart-policy never  --image jeoiatiacr.azurecr.io/activityreader:1.0 --cpu 1 --memory 1 --registry-login-server jeoiatiacr.azurecr.io --registry-username $acrUser --registry-password $password --dns-name-label "jeoiatiacr" --ports 80 --os-type Linux 
+az container show --resource-group iatiactivitygrp --name "ccdemo1aci" --query instanceView.state
+
+az container logs --resource-group iatiactivitygrp --name "ccdemo1aci"
+
+

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ActivityReaderV2": {
+      "commandName": "Project",
+      "commandLineArgs": "\"https://jeo3demostorage.blob.core.windows.net/private2?sv=2019-02-02&si=private2-lr&sr=c&sig=UChUjOSD0WzXFBcZqYzW%2BKLElTKuMhlbFj8UFgVI3Ow%3D\" \"DZ.xml\""
+    }
+  }
+}
