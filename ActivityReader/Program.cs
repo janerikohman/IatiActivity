@@ -17,8 +17,11 @@ namespace ActivityReader
             // https://jeo4cyberdemostorage.blob.core.windows.net/private2?sv=2019-12-12&si=private2-176F33B69E2&sr=c&sig=6VmOqynJf1gyH%2BO%2FTcDx3AXOi4sxESy5WpXlD%2Bccs5c%3D
             //var containerSAP = args[0];
             //var fileName = args[1];
-            var containerSAP = "https://jeo4cyberdemostorage.blob.core.windows.net/private2?sv=2019-12-12&si=private2-176F33B69E2&sr=c&sig=6VmOqynJf1gyH%2BO%2FTcDx3AXOi4sxESy5WpXlD%2Bccs5c%3D";
+            //var containerSAP = "https://jeo4cyberdemostorage.blob.core.windows.net/private2?sv=2019-12-12&si=private2-176F33B69E2&sr=c&sig=6VmOqynJf1gyH%2BO%2FTcDx3AXOi4sxESy5WpXlD%2Bccs5c%3D";
+            var containerSAP = Environment.GetEnvironmentVariable("CONTAINER_SAP");
             var fileName = "DZ.xml";
+
+            Console.WriteLine($"SAP is now {containerSAP}");
 
             try
             {
@@ -35,7 +38,7 @@ namespace ActivityReader
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Something unexpected happened {ex}!");
+                Console.WriteLine($"Something unexpected happened {ex.Message}!");
             }
             Console.WriteLine($"Finished import {DateTime.Now}!");
         }

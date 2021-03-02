@@ -32,6 +32,7 @@ az acr create --resource-group "iatiactivitygrp" --name "jeoiatiacr" --sku
 az acr login --name "jeoiatiacr"
 az acr show --name "jeoiatiacr" --query loginServer --output table
 
+# Docker commands if you do this outside the DevOps Pipeline
 docker images
 docker build -t activityreader -f Dockerfile .
 docker tag activityreader:latest jeoiatiacr.azurecr.io/activityreader:1.0
@@ -39,13 +40,16 @@ docker push jeoiatiacr.azurecr.io/activityreader:1.0
 
 
 
+# Setting upp an Azure Container Instance
 az acr show --name jeoiatiacr --query loginServer
 $acrUser = az acr credential show -n jeoiatiacr --query username
 $password = az acr credential show -n jeoiatiacr --query "passwords[0].value"  -o tsv
 
-az container create --resource-group iatiactivitygrp --name "ccdemo1aci" --restart-policy never  --image jeoiatiacr.azurecr.io/activityreader:1.0 --cpu 1 --memory 1 --registry-login-server jeoiatiacr.azurecr.io --registry-username $acrUser --registry-password $password --dns-name-label "jeoiatiacr" --ports 80 --os-type Linux 
-az container show --resource-group iatiactivitygrp --name "ccdemo1aci" --query instanceView.state
+# az container create --resource-group iatiactivitygrp --name "jeodemoaci" --restart-policy never  --image jeoiatiacr.azurecr.io/activityreader:1.0 --cpu 1 --memory 1 --registry-login-server jeoiatiacr.azurecr.io --registry-username $acrUser --registry-password $password --dns-name-label "jeoiatiacr" --ports 80 --os-type Linux 
+az container create --resource-group iatiactivitygrp --name "jeodemoaci" --restart-policy never  --image jeoiatiacr.azurecr.io/janerikohmaniatiactivity:112 --cpu 1 --memory 1 --registry-login-server jeoiatiacr.azurecr.io --registry-username $acrUser --registry-password $password --dns-name-label "jeoiatiacr" --ports 80 --os-type Linux 
+az container show --resource-group iatiactivitygrp --name "jeodemoaci" --query instanceView.state
 
-az container logs --resource-group iatiactivitygrp --name "ccdemo1aci"
+
+az container logs --resource-group iatiactivitygrp --name "jeodemoaci"
 
 

@@ -3,6 +3,9 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 
+ARG SECRET
+ENV CONTAINER_SAP $SECRET
+
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["ActivityReader.csproj", ""]
