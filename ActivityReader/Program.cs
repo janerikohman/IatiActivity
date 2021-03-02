@@ -20,16 +20,23 @@ namespace ActivityReader
             var containerSAP = "https://jeo4cyberdemostorage.blob.core.windows.net/private2?sv=2019-12-12&si=private2-176F33B69E2&sr=c&sig=6VmOqynJf1gyH%2BO%2FTcDx3AXOi4sxESy5WpXlD%2Bccs5c%3D";
             var fileName = "DZ.xml";
 
-            var containerClient = new BlobContainerClient(new Uri(containerSAP), null);
-            var blobclient = containerClient.GetBlobClient(fileName);
-
-
-            //using (activityStream = File.OpenRead(args[0]))
-            using (Stream activityStream = blobclient.OpenRead())
+            try
             {
-                ReadActivities(activityStream);
-            }
+                var containerClient = new BlobContainerClient(new Uri(containerSAP), null);
+                var blobclient = containerClient.GetBlobClient(fileName);
 
+
+                //using (activityStream = File.OpenRead(args[0]))
+                using (Stream activityStream = blobclient.OpenRead())
+                {
+                    ReadActivities(activityStream);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Something unexpected happened {ex}!");
+            }
             Console.WriteLine($"Finished import {DateTime.Now}!");
         }
 
