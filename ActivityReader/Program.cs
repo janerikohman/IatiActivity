@@ -22,6 +22,7 @@ namespace ActivityReader
             var fileName = "DZ.xml";
 
             //Console.WriteLine($"SAP is now {containerSAP}");
+            Console.WriteLine($"QSAP is now {Environment.GetEnvironmentVariable("QEUEU_SAP")}");
 
             try
             {
