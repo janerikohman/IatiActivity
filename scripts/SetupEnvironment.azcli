@@ -46,7 +46,7 @@ $acrUser = az acr credential show -n jeoiatiacr --query username
 $password = az acr credential show -n jeoiatiacr --query "passwords[0].value"  -o tsv
 
 # az container create --resource-group iatiactivitygrp --name "jeodemoaci" --restart-policy never  --image jeoiatiacr.azurecr.io/activityreader:1.0 --cpu 1 --memory 1 --registry-login-server jeoiatiacr.azurecr.io --registry-username $acrUser --registry-password $password --dns-name-label "jeoiatiacr" --ports 80 --os-type Linux 
-az container create --resource-group iatiactivitygrp --name "jeodemoaci" --restart-policy never  --image jeoiatiacr.azurecr.io/janerikohmaniatiactivity:112 --cpu 1 --memory 1 --registry-login-server jeoiatiacr.azurecr.io --registry-username $acrUser --registry-password $password --dns-name-label "jeoiatiacr" --ports 80 --os-type Linux 
+az container create --resource-group iatiactivitygrp --name "jeodemoaci" --restart-policy never  --image jeoiatiacr.azurecr.io/janerikohmaniatiactivity:latest --cpu 1 --memory 1 --registry-login-server jeoiatiacr.azurecr.io --registry-username $acrUser --registry-password $password --dns-name-label "jeoiatiacr" --ports 80 --os-type Linux 
 az container show --resource-group iatiactivitygrp --name "jeodemoaci" --query instanceView.state
 
 

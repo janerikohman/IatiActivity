@@ -21,7 +21,7 @@ namespace ActivityReader
             var containerSAP = Environment.GetEnvironmentVariable("CONTAINER_SAP");
             var fileName = "DZ.xml";
 
-            Console.WriteLine($"SAP is now {containerSAP}");
+            //Console.WriteLine($"SAP is now {containerSAP}");
 
             try
             {
@@ -40,7 +40,7 @@ namespace ActivityReader
             {
                 Console.WriteLine($"Something unexpected happened {ex.Message}!");
             }
-            Console.WriteLine($"Finished import {DateTime.Now}!");
+            Console.WriteLine($"Finished import - SAP supplied through build Pipeline {DateTime.Now}!");
         }
 
         private static void ReadActivities(Stream activityStream)
