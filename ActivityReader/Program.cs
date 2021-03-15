@@ -19,10 +19,15 @@ namespace ActivityReader
             //var fileName = args[1];
             //var containerSAP = "https://jeo4cyberdemostorage.blob.core.windows.net/private2?sv=2019-12-12&si=private2-176F33B69E2&sr=c&sig=6VmOqynJf1gyH%2BO%2FTcDx3AXOi4sxESy5WpXlD%2Bccs5c%3D";
             var containerSAP = Environment.GetEnvironmentVariable("CONTAINER_SAP");
-            var fileName = "DZ.xml";
+            var fileName = Environment.GetEnvironmentVariable("IATI_FILE");
+            if (fileName==null || fileName.Length==0)
+            {
+                fileName = "DZ.xml";
+            }
 
             //Console.WriteLine($"SAP is now {containerSAP}");
             //Console.WriteLine($"QSAP is now {Environment.GetEnvironmentVariable("QEUEU_SAP")}");
+            //Console.WriteLine($"FileName is {fileName}");
 
             try
             {
