@@ -36,7 +36,7 @@ stages:
        dockerfile: $(dockerfilePath)
        containerRegistry: $(dockerRegistryServiceConnection)
        tags: latest
-       arguments: --build-arg SECRET=$(containerSAP) --build-arg QSECRET=$(queueSAS)
+       arguments: --build-arg SECRET=$(containerSAP) --build-arg QSECRET=$(queueSAS) --build-arg FILESASSECRET=$(fileSAS)
     - task: Docker@2
       displayName: Push
       inputs:
