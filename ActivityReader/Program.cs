@@ -3,6 +3,10 @@ using System.IO;
 using System.Xml.Serialization;
 
 using Azure.Storage.Blobs;
+using Azure.Storage.Queues;
+using Azure.Storage.Queues.Models;
+using Azure.Storage.Queues;
+using Azure.Storage.Queues.Models;
 
 
 namespace ActivityReader
@@ -19,15 +23,17 @@ namespace ActivityReader
             //var fileName = args[1];
             //var containerSAP = "https://jeo4cyberdemostorage.blob.core.windows.net/private2?sv=2019-12-12&si=private2-176F33B69E2&sr=c&sig=6VmOqynJf1gyH%2BO%2FTcDx3AXOi4sxESy5WpXlD%2Bccs5c%3D";
             var containerSAP = Environment.GetEnvironmentVariable("CONTAINER_SAP");
-            var fileName = Environment.GetEnvironmentVariable("IATI_FILE");
+            var fileQSAS = Environment.GetEnvironmentVariable("IATI_FILE_SAS");
+            string fileName = ExtractFileName(fileQSAS);
+            Console.WriteLine($"Extracted filename was {fileName}");
             if (fileName==null || fileName.Length==0)
             {
                 fileName = "DZ.xml";
             }
 
-            //Console.WriteLine($"SAP is now {containerSAP}");
-            //Console.WriteLine($"QSAP is now {Environment.GetEnvironmentVariable("QEUEU_SAP")}");
-            //Console.WriteLine($"FileName is {fileName}");
+            Console.WriteLine($"SAP is now {containerSAP}");
+            Console.WriteLine($"QSAP is now {Environment.GetEnvironmentVariable("QEUEU_SAP")}");
+            Console.WriteLine($"FileName is {fileName}");
 
             try
             {
@@ -47,6 +53,26 @@ namespace ActivityReader
                 Console.WriteLine($"Something unexpected happened {ex.Message}!");
             }
             Console.WriteLine($"Finished import - SAP supplied through build Pipeline {DateTime.Now}!");
+        }
+
+        private static string ExtractFileName(string fileQSAS)
+        {
+            string blobName = null;
+            try
+            {
+                QueueClient client = new QueueClient(new System.Uri(fileQSAS), new QueueClientOptions() { MessageEncoding = QueueMessageEncoding.Base64 });
+                QueueMessage msg = client.ReceiveMessage();
+                var blobUri = msg.Body.ToString();
+                var blobUriSegments = new Uri(blobUri).Segments;
+                blobName = blobUriSegments[^1];
+                client.DeleteMessage(msg.MessageId, msg.PopReceipt);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Extract filename failed with message {e.ToString()}");
+            }
+            Console.WriteLine($"ExtractFileName returns {blobName}");
+            return blobName;
         }
 
         private static void ReadActivities(Stream activityStream)
